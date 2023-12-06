@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, useMediaQuery, Button } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import { useNavigate } from "react-router-dom";
 import { data } from "../../utils/data";
 import io from "socket.io-client";
 
 const socket = io.connect("http://localhost:3000");
 
-const Sidebar = ({ chatMessages }) => {
+const Sidebar = ({ chatMessages, onSendMessage, onSendPersonsData }) => {
   const [lastMessages, setLastMessages] = useState({});
   const [top, setTop] = useState({});
   const [persons, setPersons] = useState(data);
   const isArange = useMediaQuery("(max-width:600px)");
-  const navigate = useNavigate();
 
-  const handleClick = (id) => {
-    navigate(`/${id}`);
+  
+  const handleClick = (phone) => {
+    const FilteredMessages = chatMessages.filter((message) => message.phone === phone);
+    onSendMessage(FilteredMessages);
+
+    const FilteredPersonsData = persons.filter((person) => person.phone === phone);
+    onSendPersonsData(FilteredPersonsData);
   };
 
   useEffect(() => {
@@ -95,9 +98,6 @@ const Sidebar = ({ chatMessages }) => {
               new Date(top[a.phone]?.date || "").getTime() / 1000;
             const bLastMessageDate =
               new Date(top[b.phone]?.date || "").getTime() / 1000;
-
-            console.log(aLastMessageDate);
-            console.log(bLastMessageDate);
 
             return aLastMessageDate - bLastMessageDate;
           })

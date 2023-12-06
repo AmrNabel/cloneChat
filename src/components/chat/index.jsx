@@ -4,28 +4,32 @@ import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
 import logo from "../../assets/logo2.jpg";
-import { masseges, data } from "../../utils/data";
 import { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
 import { FilledInput } from "@mui/material";
+import { data } from "../../utils/data";
 
-const Chat = ({ onSendData }) => {
-  const { id } = useParams();
+
+const Chat = ({ onSendData, filteredMessages , chatMessages }) => {
   const [list, setList] = useState([]);
   const [infoList, setInfoList] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const [Allmessages, setMessages] = useState(masseges);
-  const [close, setClose] = useState(false);
-  const [isChatClosed, setIsChatClosed] = useState(false);
+  // const [close, setClose] = useState(false);
+  // const [isChatClosed, setIsChatClosed] = useState(false);
   const messagesEndRef = useRef(null);
   const isArange = useMediaQuery("(max-width:600px)");
 
   useEffect(() => {
-    const record = Allmessages.filter((message) => message.phone === id);
-    const info = data.filter((person) => person.phone === id);
+    const record = chatMessages.filter((message) => message.phone === filteredMessages[0]?.phone);
     setList(record);
-    setInfoList(...info);
-  }, [id, Allmessages]);
+    
+  }, [chatMessages, filteredMessages]);
+  
+  useEffect(() => {
+   
+    const personData = data.filter((message) => message.phone === filteredMessages[0]?.phone);
+    setInfoList(...personData);
+    
+  }, [filteredMessages]);
 
   useEffect(() => {
     messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -35,20 +39,19 @@ const Chat = ({ onSendData }) => {
     setInputValue(e.target.value);
   };
 
-  const addData = (id) => {
+  const addData = (phone) => {
     if (inputValue.trim() !== "") {
       const newMessage = {
-        id: (Allmessages.length + 1).toString(),
+        id: (chatMessages.length + 1).toString(),
         speaker: "Agent",
         message: inputValue,
-        phone: id,
+        phone: phone,
         date: new Date()
       };
-      setMessages([...Allmessages, newMessage]);
-      onSendData([...Allmessages, newMessage]);
+      onSendData([...chatMessages, newMessage]);
       setInputValue("");
-      setClose({ isClose: false });
-      setIsChatClosed(false);
+      // setClose({ isClose: false });
+      // setIsChatClosed(false);
       messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
     }
   };
@@ -63,16 +66,15 @@ const Chat = ({ onSendData }) => {
 
   const onCloseChat = (phone) => {
     const endMessage = {
-      id: (Allmessages.length + 1).toString(),
+      id: (chatMessages.length + 1).toString(),
       speaker: "Agent",
       message: "Chat ended, Thank you",
-      phone: id,
+      phone: phone,
       date: new Date()?.toDateString(),
     };
-    setMessages([...Allmessages, endMessage]);
-    onSendData([...Allmessages, endMessage]);
-    setClose({ id: phone, isClose: true });
-    setIsChatClosed({ id: phone, isCloseChat: true });
+    onSendData([...chatMessages, endMessage]);
+    // setClose({ id: phone, isClose: true });
+    // setIsChatClosed({ id: phone, isCloseChat: true });
   };
 
   const buttonStyles = {
@@ -142,6 +144,19 @@ const Chat = ({ onSendData }) => {
           overflow: "auto",
         }}
       >
+        {list.length === 0 && (
+          <Typography
+            sx={{
+              color: "#A38540",
+              bgcolor: "#413D3A",
+              fontWeight: "bold",
+              fontSize: { xs: "14px", md: "30px" },
+              m:'auto'
+            }}
+          >
+            No Chats Found
+          </Typography>
+        )}
         {list.map((msg, index) => {
           const isLastMessage = index === list.length - 1;
 
@@ -223,7 +238,7 @@ const Chat = ({ onSendData }) => {
           sx={buttonStyles}
           endIcon={<CloseIcon sx={{ color: "#F9AE00", fontSize: "30px" }} />}
           onClick={() => onCloseChat(list[0].phone)}
-          disabled={isChatClosed.isCloseChat && isChatClosed.id === id}
+          // disabled={isChatClosed.isCloseChat && isChatClosed.id === id}
         >
           close
         </Button>
@@ -233,8 +248,8 @@ const Chat = ({ onSendData }) => {
           multiline
           value={inputValue}
           onChange={handleInputChange}
-          onKeyPress={(e) => handleKeyPress(e, id)}
-          disabled={!close.isClosed && close.id === id}
+          onKeyPress={(e) => handleKeyPress(e, list[0].phone)}
+          // disabled={!close.isClosed && close.id === id}
           maxRows={2}
           variant="outlined"
           placeholder="Say Something"
@@ -252,7 +267,7 @@ const Chat = ({ onSendData }) => {
         <Button
           sx={buttonStyles}
           endIcon={<SendIcon sx={{ color: "#F9AE00", fontSize: "30px" }} />}
-          onClick={() => addData(id)}
+          onClick={() => addData(filteredMessages[0].phone)}
         >
           Send
         </Button>
