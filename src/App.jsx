@@ -1,26 +1,28 @@
-import { Box } from "@mui/material";
 import React from "react";
-import Navbar from "./components/navbar";
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Box } from "@mui/material";
+// import Navbar from "./components/navbar";
 import ChatApp from "./components/ChatApp/ChatApp";
+import LoginPage from "./components/Login";
 
 const App = () => {
   return (
-    <>
-      <Navbar />
+    <Router>
+      {/* <Navbar /> */}
       <Box
         sx={{
           p: "0",
           m: "0",
-          // height: "100%",
-          // position: "relative",
           width: "100%",
-          bgColor: "#333230",
+          bgcolor: "#F0F0F0", 
         }}
       >
-        <ChatApp />
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/chat" element={<ChatApp />} />
+        </Routes>
       </Box>
-    </>
+    </Router>
   );
 };
 

@@ -4,7 +4,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { data } from "../../utils/data";
 import io from "socket.io-client";
 
-const socket = io.connect("http://localhost:3000");
+const socket = io.connect("http://192.168.22.26:3580");
 
 const Sidebar = ({ chatMessages, onSendMessage, onSendPersonsData }) => {
   const [lastMessages, setLastMessages] = useState({});
@@ -55,7 +55,7 @@ const Sidebar = ({ chatMessages, onSendMessage, onSendPersonsData }) => {
     setTimeout(delayedAddition, 100);
   };
 
-  socket.on("outboundMessage", (data) => {
+  socket.on("inboundConversation", (data) => {
     const newPerson = {
       id: data.id,
       name: data.name,
