@@ -39,7 +39,7 @@ const LoginPage = () => {
         >
           <Typography
             variant="h4"
-            sx={{ mb: 2, fontWeight: "bold", textAlign: "center" }}
+            sx={{ mb: 2, fontWeight: "bold", textAlign: "center",color:'#808080' }}
           >
             Welcome back!
           </Typography>
@@ -63,7 +63,15 @@ const LoginPage = () => {
               variant="contained"
               color="primary"
               fullWidth
-              sx={{ mb: 2, backgroundColor: "#ea454c", borderRadius: "10px" }}
+              sx={{
+                mb: 2,
+                backgroundColor: "#ea454c",
+                borderRadius: "10px",
+                fontWeight: "bold",
+                "&:hover": {
+                  backgroundColor: "#ba3f43",
+                },
+              }}
             >
               Sign in
             </Button>
@@ -73,6 +81,7 @@ const LoginPage = () => {
                 mb: 2,
                 textAlign: "center",
                 fontSize: "21px",
+                // fontWeight: "bold",
                 color: "#808080",
               }}
             >
@@ -84,6 +93,7 @@ const LoginPage = () => {
                 mb: 2,
                 textAlign: "center",
                 color: "#f76a6f",
+                fontWeight: "bold",
                 fontSize: "14px",
               }}
             >
@@ -100,10 +110,17 @@ const LoginPage = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor:'#FFD099'
+          backgroundColor: "#F2F1EB",
         }}
       >
-        <Box sx={{height: "50%", width: "100%",display: "flex",justifyContent: "center"}}>
+        <Box
+          sx={{
+            height: "50%",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <img src={logo} alt="logo" style={{ height: "70%", width: "70%" }} />
         </Box>
         <Typography
